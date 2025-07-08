@@ -1,0 +1,9 @@
+build:
+	@mkdir -p bin
+	@go build -o bin/API_GOLANG cmd/main.go
+
+ test:
+	@go test -v ./...
+
+run: build
+	@./bin/API_GOLANG
