@@ -33,13 +33,15 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	// conseguir Json PayLoad, buscar si el usuaio existe, sino crearlo
 
 	var payload types.RegisterUserPayload
-	if err := utils.ParseJSON(r, payload); err != nil {
+	if err := utils.ParseJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
+		return
 	}
 
 	_, err := h.store.GetUserByEmail(payload.Email)
 	if err == nil {
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with this email already exists", payload.Email))
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with this email already exists %s", payload.Email))
+		return
 	}
 
 	HashedPassword, err := auth.HashPassword(payload.Password)
